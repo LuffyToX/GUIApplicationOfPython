@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>loginUI</class>
+ <widget class="QWidget" name="loginUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>登录</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="apprcc.qrc">
+    <normaloff>:/pic/images/login icon.ico</normaloff>:/pic/images/login icon.ico</iconset>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>70</y>
+     <width>222</width>
+     <height>125</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="3" colspan="2">
+     <widget class="QLineEdit" name="password_ld">
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="user_lb">
+      <property name="text">
+       <string>用户名</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="2">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>28</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>28</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="3" colspan="2">
+     <widget class="QLineEdit" name="user_ld"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="password_lb">
+      <property name="text">
+       <string>密码</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="2">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>18</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="identity_lb">
+      <property name="text">
+       <string>身份</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QRadioButton" name="student_rb">
+      <property name="text">
+       <string>学生</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="4">
+     <widget class="QRadioButton" name="librarian_rb">
+      <property name="text">
+       <string>图书管理员</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="5">
+     <widget class="QPushButton" name="login_btn">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>登录/注册</string>
+      </property>
+      <property name="icon">
+       <iconset resource="apprcc.qrc">
+        <normaloff>:/pic/images/login button.ico</normaloff>:/pic/images/login button.ico</iconset>
+      </property>
+     </widget>
+    </item>
+   </layout>
+   <zorder>password_ld</zorder>
+   <zorder>user_ld</zorder>
+   <zorder>password_lb</zorder>
+   <zorder>login_btn</zorder>
+   <zorder>horizontalSpacer_3</zorder>
+   <zorder>identity_lb</zorder>
+   <zorder>student_rb</zorder>
+   <zorder>librarian_rb</zorder>
+   <zorder>user_lb</zorder>
+  </widget>
+ </widget>
+ <resources>
+  <include location="apprcc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

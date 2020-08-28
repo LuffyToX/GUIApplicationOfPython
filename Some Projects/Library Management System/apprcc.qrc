@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="pic">
+    <file>images/student background.png</file>
+    <file>images/tab1.ico</file>
+    <file>images/tab2.ico</file>
+    <file>images/tab3.ico</file>
+    <file>images/login icon.ico</file>
+    <file>images/login background.jpg</file>
+    <file>images/login button.ico</file>
+  </qresource>
+</RCC>

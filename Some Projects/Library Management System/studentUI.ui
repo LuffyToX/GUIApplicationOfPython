@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StudentUI</class>
+ <widget class="QWidget" name="StudentUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>549</width>
+    <height>332</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>学生端</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="apprcc.qrc">
+    <normaloff>:/pic/images/login icon.ico</normaloff>:/pic/images/login icon.ico</iconset>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>551</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <property name="elideMode">
+    <enum>Qt::ElideNone</enum>
+   </property>
+   <widget class="QWidget" name="query">
+    <attribute name="icon">
+     <iconset resource="apprcc.qrc">
+      <normaloff>:/pic/images/tab1.ico</normaloff>:/pic/images/tab1.ico</iconset>
+    </attribute>
+    <attribute name="title">
+     <string>查询</string>
+    </attribute>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLineEdit" name="query_ld">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="query_btn">
+       <property name="text">
+        <string>查询</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QTableWidget" name="query_tw">
+       <property name="rowCount">
+        <number>1</number>
+       </property>
+       <property name="columnCount">
+        <number>5</number>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <row/>
+       <column/>
+       <column/>
+       <column/>
+       <column/>
+       <column/>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="borrow">
+    <attribute name="icon">
+     <iconset resource="apprcc.qrc">
+      <normaloff>:/pic/images/tab2.ico</normaloff>:/pic/images/tab2.ico</iconset>
+    </attribute>
+    <attribute name="title">
+     <string>借阅</string>
+    </attribute>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="borrow_ld"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="borrow_btn">
+       <property name="text">
+        <string>借阅</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="back">
+    <attribute name="icon">
+     <iconset resource="apprcc.qrc">
+      <normaloff>:/pic/images/tab3.ico</normaloff>:/pic/images/tab3.ico</iconset>
+    </attribute>
+    <attribute name="title">
+     <string>归还</string>
+    </attribute>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="back_ld"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="back_btn">
+       <property name="text">
+        <string>归还</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="apprcc.qrc"/>
+ </resources>
+ <connections/>
+</ui>
