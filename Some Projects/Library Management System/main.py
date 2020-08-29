@@ -52,14 +52,23 @@ class loginUI(QWidget, Ui_loginUI):
             if self.student_rb.isChecked():
                 with open('studentInformation.txt', 'r', encoding='utf-8') as fileR:
                     lines = fileR.readlines()
-                # studentInformation.txt 不可有非打印字符（这种情况有时间再处理）
-                if not lines:
+
+                # 去掉 lines 中的 '\n'
+                newlines = []
+                for line in lines:
+                    line = line.replace('\n', '')
+                    if line:
+                        newlines.append(line)
+
+                # 空表
+                if not newlines:
                     with open('studentInformation.txt', 'w', encoding='utf-8') as fileW:
                         lines.append(self.user_ld.text() + '，' + self.password_ld.text() + '\n')
                         fileW.writelines(lines)
+                # 非空表
                 else:
                     names = []
-                    for line in lines:
+                    for line in newlines:
                         name, password, *others = line.rstrip().split('，')
                         names.append(name)
                         if name == self.user_ld.text() and password != self.password_ld.text():
@@ -69,6 +78,7 @@ class loginUI(QWidget, Ui_loginUI):
                         with open('studentInformation.txt', 'w', encoding='utf-8') as fileW:
                             lines.append(self.user_ld.text() + '，' + self.password_ld.text() + '\n')
                             fileW.writelines(lines)
+
                 self.stuUI = studentUI()
                 self.stuUI.setWindowTitle(self.user_ld.text())
                 self.stuUI.show()
