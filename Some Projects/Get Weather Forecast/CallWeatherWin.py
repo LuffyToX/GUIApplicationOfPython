@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from WeatherWin import Ui_Form
 
 
-class MainWindow(QMainWindow ):
+class MainWindow(QMainWindow):
 	def __init__(self, parent=None):    
 		super(MainWindow, self).__init__(parent)
 		self.ui = Ui_Form()
@@ -32,13 +32,13 @@ class MainWindow(QMainWindow ):
 		result = msg1 + msg2 + msg3 + msg4 + msg5
 		self.ui.resultText.setText(result)
 		
-	def transCityName(self ,cityName):
+	def transCityName(self, cityName):
 		cityCode = ''
-		if cityName == '北京' :
+		if cityName == '北京':
 			cityCode = '101010100'
-		elif cityName == '天津' :
+		elif cityName == '天津':
 			cityCode = '101030100'
-		elif cityName == '上海' :
+		elif cityName == '上海':
 			cityCode = '101020100'
 			
 		return cityCode

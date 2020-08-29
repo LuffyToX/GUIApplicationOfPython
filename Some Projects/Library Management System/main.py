@@ -2,7 +2,7 @@
 
 import sys
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QStringListModel
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QAbstractItemView, QTableWidgetItem
 from PyQt5.QtGui import QPixmap, QPainter
 from loginUI import Ui_loginUI
@@ -47,18 +47,42 @@ class loginUI(QWidget, Ui_loginUI):
                 return True
 
     def goto(self):
-        """ 登录跳转（学生/管理员） """
+        """ 登录跳转（学生/管理员）若未注册，即自动注册 """
         if self.check(self.user_ld.text()) and self.check(self.password_ld.text()):
             if self.student_rb.isChecked():
+                with open('studentInformation.txt', 'r', encoding='utf-8') as fileR:
+                    lines = fileR.readlines()
+                # studentInformation.txt 不可有非打印字符（这种情况有时间再处理）
+                if not lines:
+                    with open('studentInformation.txt', 'w', encoding='utf-8') as fileW:
+                        lines.append(self.user_ld.text() + '，' + self.password_ld.text() + '\n')
+                        fileW.writelines(lines)
+                else:
+                    names = []
+                    for line in lines:
+                        name, password, *others = line.rstrip().split('，')
+                        names.append(name)
+                        if name == self.user_ld.text() and password != self.password_ld.text():
+                            QMessageBox.warning(self, "Warning", "密码错误", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                            return False
+                    if self.user_ld.text() not in names:
+                        with open('studentInformation.txt', 'w', encoding='utf-8') as fileW:
+                            lines.append(self.user_ld.text() + '，' + self.password_ld.text() + '\n')
+                            fileW.writelines(lines)
                 self.stuUI = studentUI()
+                self.stuUI.setWindowTitle(self.user_ld.text())
                 self.stuUI.show()
                 self.close()
             elif self.librarian_rb.isChecked():
+                if self.user_ld.text() != 'Admin' or self.password_ld.text() != '666':
+                    QMessageBox.warning(self, "Warning", "请输入正确的管理员账号及密码", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    return False
                 self.libUI = librarianUI()
+                self.libUI.setWindowTitle("图书管理员")
                 self.libUI.show()
                 self.close()
         else:
-            QMessageBox.warning(self, "title", "请输入正确的用户名及密码", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请输入正确的用户名及密码", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             self.user_ld.clear()
             self.password_ld.clear()
 
@@ -103,7 +127,7 @@ class studentUI(QWidget, Ui_StudentUI):
                         self.query_tw.setItem(0, itemcotent[0], item)
                     self.query_ld.clear()
                     return True
-        QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        QMessageBox.information(self, "Message", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         self.query_ld.clear()
         return False
 
@@ -119,15 +143,28 @@ class studentUI(QWidget, Ui_StudentUI):
                     state = int(state)
                     if state > 0:
                         lines[lineNum] = name + '，' + author + '，' + str(state-1) + '，' + amount + '，' + position + '\n'
-                        QMessageBox.information(self, "title", "借阅成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        QMessageBox.information(self, "Message", "借阅成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        with open('studentInformation.txt', 'r', encoding='utf-8') as stufileR:
+                            stuLines = stufileR.readlines()
+                        with open('studentInformation.txt', 'w', encoding='utf-8') as stufileW:
+                            stuLineNum = 0
+                            username = self.windowTitle()
+                            for stuLine in stuLines:
+                                stuName, stupassword, *others = stuLine.split('，')
+                                if username == stuName:
+                                    stuLine = stuLine.replace('\n', '')
+                                    stuLines[stuLineNum] = stuLine + '，' + name + '\n'
+                                    stufileW.writelines(stuLines)
+                                    break
+                                stuLineNum = stuLineNum + 1
                     else:
-                        QMessageBox.information(self, "title", "此书已全部借出", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        QMessageBox.information(self, "Message", "此书已全部借出", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     print(lines)
                     fileW.writelines(lines)
                     self.borrow_ld.clear()
                     return True
                 lineNum = lineNum + 1
-            QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.information(self, "Message", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             fileW.writelines(lines)
             self.borrow_ld.clear()
             return False
@@ -144,15 +181,35 @@ class studentUI(QWidget, Ui_StudentUI):
                     state = int(state)
                     if state < int(amount):
                         lines[lineNum] = name + '，' + author + '，' + str(state+1) + '，' + amount + '，' + position + '\n'
-                        QMessageBox.information(self, "title", "还书成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        QMessageBox.information(self, "Message", "还书成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        with open('studentInformation.txt', 'r', encoding='utf-8') as stufileR:
+                            stuLines = stufileR.readlines()
+                        with open('studentInformation.txt', 'w', encoding='utf-8') as stufileW:
+                            stuLineNum = 0
+                            username = self.windowTitle()
+                            for stuLine in stuLines:
+                                stuName, stupassword, *others = stuLine.split('，')
+                                if username == stuName:
+                                    if name in others:
+                                        others.remove(name)
+                                        others = '，'.join(others)
+                                        stuLines[stuLineNum] = stuName + '，' + stupassword + '，' + others + '\n'
+                                        stufileW.writelines(stuLines)
+                                        break
+                                    else:
+                                        # 只有一本 （'name\n'），不能用 remove()
+                                        stuLines[stuLineNum] = stuName + '，' + stupassword + '\n'
+                                        stufileW.writelines(stuLines)
+                                        break
+                                stuLineNum = stuLineNum + 1
                     else:
-                        QMessageBox.information(self, "title", "馆藏可没这么多", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                        QMessageBox.information(self, "Message", "馆藏可没这么多", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     print(lines)
                     fileW.writelines(lines)
                     self.back_ld.clear()
                     return True
                 lineNum = lineNum + 1
-            QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.information(self, "Message", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             fileW.writelines(lines)
             self.back_ld.clear()
             return False
@@ -180,19 +237,19 @@ class librarianUI(QWidget, Ui_librarianUI):
     def judge(self):
         """ 判断书籍格式是否正确 """
         if not self.addName_ld.text():
-            QMessageBox.warning(self, "title", "请填写书名", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请填写书名", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             return False
         if not self.addAuthor_ld.text():
-            QMessageBox.warning(self, "title", "请填写作者", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请填写作者", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             return False
         if not self.addState_ld.text():
-            QMessageBox.warning(self, "title", "请填写剩余馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请填写剩余馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             return False
         if not self.addAmount_ld.text():
-            QMessageBox.warning(self, "title", "请填写全部馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请填写全部馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             return False
         if not self.addPosition_ld:
-            QMessageBox.warning(self, "title", "请填写书架号", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            QMessageBox.warning(self, "Warning", "请填写书架号", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
             return False
         return True
 
@@ -207,22 +264,28 @@ class librarianUI(QWidget, Ui_librarianUI):
                 state = self.addState_ld.text()
                 amount = self.addAmount_ld.text()
                 position = self.addPosition_ld.text()
+                print(lines)
                 lines.append(name + '，' + author + '，' + state + '，' + amount + '，' + position + '\n')
+                print(lines)
                 fileW.writelines(lines)
-                QMessageBox.information(self, "title", "添加成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                QMessageBox.information(self, "Message", "添加成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                 self.addName_ld.clear()
                 self.addAuthor_ld.clear()
                 self.addState_ld.clear()
                 self.addAmount_ld.clear()
                 self.addPosition_ld.clear()
+                return True
+            fileW.writelines(lines)
+            return False
 
     def studentInformation(self):
         """ 查看学生信息操作槽函数 """
-
-
-
-
-
+        with open('studentInformation.txt', 'r', encoding='utf-8') as file:
+            slm = QStringListModel()
+            lines = file.readlines()
+            print(lines)
+            slm.setStringList(lines)
+            self.studentInformation_lv.setModel(slm)
 
 
 if __name__ == "__main__":
