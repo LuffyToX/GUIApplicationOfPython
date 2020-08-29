@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QAbstractItemVie
 from PyQt5.QtGui import QPixmap, QPainter
 from loginUI import Ui_loginUI
 from studentUI import Ui_StudentUI
+from librarianUI import Ui_librarianUI
 
 
 class loginUI(QWidget, Ui_loginUI):
@@ -53,9 +54,13 @@ class loginUI(QWidget, Ui_loginUI):
                 self.stuUI.show()
                 self.close()
             elif self.librarian_rb.isChecked():
-                print("librarian login")
+                self.libUI = librarianUI()
+                self.libUI.show()
+                self.close()
         else:
             QMessageBox.warning(self, "title", "请输入正确的用户名及密码", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            self.user_ld.clear()
+            self.password_ld.clear()
 
 
 class studentUI(QWidget, Ui_StudentUI):
@@ -67,7 +72,7 @@ class studentUI(QWidget, Ui_StudentUI):
         self.setWindowFlags(Qt.WindowCloseButtonHint)
 
         # 设置表格的水平表头标签
-        self.query_tw.setHorizontalHeaderLabels(["书名", "作者", "剩余馆藏/本", "书籍总数/本", "书架号"])
+        self.query_tw.setHorizontalHeaderLabels(["书名", "作者", "剩余馆藏/本", "全部馆藏/本", "书架号"])
 
         # 将表格变为禁止编辑的
         self.query_tw.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -96,8 +101,10 @@ class studentUI(QWidget, Ui_StudentUI):
                         item = QTableWidgetItem(itemcotent[1])
                         item.setTextAlignment(Qt.AlignHCenter)
                         self.query_tw.setItem(0, itemcotent[0], item)
+                    self.query_ld.clear()
                     return True
         QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        self.query_ld.clear()
         return False
 
     def borrow_book(self):
@@ -117,10 +124,13 @@ class studentUI(QWidget, Ui_StudentUI):
                         QMessageBox.information(self, "title", "此书已全部借出", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     print(lines)
                     fileW.writelines(lines)
+                    self.borrow_ld.clear()
                     return True
                 lineNum = lineNum + 1
-        QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        return False
+            QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            fileW.writelines(lines)
+            self.borrow_ld.clear()
+            return False
 
     def back_book(self):
         """ 归还操作槽函数 """
@@ -139,12 +149,75 @@ class studentUI(QWidget, Ui_StudentUI):
                         QMessageBox.information(self, "title", "馆藏可没这么多", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     print(lines)
                     fileW.writelines(lines)
+                    self.back_ld.clear()
                     return True
                 lineNum = lineNum + 1
-        QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        return False
+            QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            fileW.writelines(lines)
+            self.back_ld.clear()
+            return False
 
 
+class librarianUI(QWidget, Ui_librarianUI):
+    def __init__(self, parent=None):
+        super(librarianUI, self).__init__(parent)
+        self.setupUi(self)
+
+        # 禁止窗口最大化和最小化
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
+
+        # 将内置信号链接到自定义槽函数
+        self.add_btn.clicked.connect(self.add_book)
+        self.studentInformation_btn.clicked.connect(self.studentInformation)
+
+    def paintEvent(self, event):
+        """ 绘制背景 """
+        painter = QPainter(self)
+        pixmap = QPixmap("./images/librarian background.jpg")
+        # 绘制窗口背景，平铺到整个窗口，随着窗口改变而改变
+        painter.drawPixmap(self.rect(), pixmap)
+
+    def judge(self):
+        """ 判断书籍格式是否正确 """
+        if not self.addName_ld.text():
+            QMessageBox.warning(self, "title", "请填写书名", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            return False
+        if not self.addAuthor_ld.text():
+            QMessageBox.warning(self, "title", "请填写作者", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            return False
+        if not self.addState_ld.text():
+            QMessageBox.warning(self, "title", "请填写剩余馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            return False
+        if not self.addAmount_ld.text():
+            QMessageBox.warning(self, "title", "请填写全部馆藏", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            return False
+        if not self.addPosition_ld:
+            QMessageBox.warning(self, "title", "请填写书架号", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            return False
+        return True
+
+    def add_book(self):
+        """ 添加新书籍操作槽函数 """
+        with open('bookDatabase.txt', 'r', encoding='utf-8') as fileR:
+            lines = fileR.readlines()
+        with open('bookDatabase.txt', 'w', encoding='utf-8') as fileW:
+            if self.judge():
+                name = self.addName_ld.text()
+                author = self.addAuthor_ld.text()
+                state = self.addState_ld.text()
+                amount = self.addAmount_ld.text()
+                position = self.addPosition_ld.text()
+                lines.append(name + '，' + author + '，' + state + '，' + amount + '，' + position + '\n')
+                fileW.writelines(lines)
+                QMessageBox.information(self, "title", "添加成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                self.addName_ld.clear()
+                self.addAuthor_ld.clear()
+                self.addState_ld.clear()
+                self.addAmount_ld.clear()
+                self.addPosition_ld.clear()
+
+    def studentInformation(self):
+        """ 查看学生信息操作槽函数 """
 
 
 

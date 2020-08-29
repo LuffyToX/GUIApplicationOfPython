@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>librarianUI</class>
+ <widget class="QWidget" name="librarianUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>564</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>图书管理员端</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="apprcc.qrc">
+    <normaloff>:/pic/images/librarian icon.ico</normaloff>:/pic/images/librarian icon.ico</iconset>
+  </property>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>521</width>
+     <height>331</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="3">
+     <widget class="QLineEdit" name="addState_ld">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>剩余馆藏</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLineEdit" name="addAuthor_ld">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>作者</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="studentInformation_btn">
+      <property name="text">
+       <string>查看学生信息</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QLineEdit" name="addAmount_ld">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>全部馆藏</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" rowspan="2" colspan="5">
+     <widget class="QListView" name="studentInformation_lv"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="addName_ld">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>书名</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QLineEdit" name="addPosition_ld">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>书架号</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="add_btn">
+      <property name="text">
+       <string>添加新书籍</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="apprcc.qrc"/>
+ </resources>
+ <connections/>
+</ui>

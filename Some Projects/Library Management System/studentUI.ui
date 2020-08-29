@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="apprcc.qrc">
-    <normaloff>:/pic/images/login icon.ico</normaloff>:/pic/images/login icon.ico</iconset>
+    <normaloff>:/pic/images/student icon.ico</normaloff>:/pic/images/student icon.ico</iconset>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -35,7 +35,7 @@
    <widget class="QWidget" name="query">
     <attribute name="icon">
      <iconset resource="apprcc.qrc">
-      <normaloff>:/pic/images/tab1.ico</normaloff>:/pic/images/tab1.ico</iconset>
+      <normaloff>:/pic/images/student tab1.ico</normaloff>:/pic/images/student tab1.ico</iconset>
     </attribute>
     <attribute name="title">
      <string>查询</string>
@@ -85,7 +85,7 @@
    <widget class="QWidget" name="borrow">
     <attribute name="icon">
      <iconset resource="apprcc.qrc">
-      <normaloff>:/pic/images/tab2.ico</normaloff>:/pic/images/tab2.ico</iconset>
+      <normaloff>:/pic/images/student tab2.ico</normaloff>:/pic/images/student tab2.ico</iconset>
     </attribute>
     <attribute name="title">
      <string>借阅</string>
@@ -106,7 +106,7 @@
    <widget class="QWidget" name="back">
     <attribute name="icon">
      <iconset resource="apprcc.qrc">
-      <normaloff>:/pic/images/tab3.ico</normaloff>:/pic/images/tab3.ico</iconset>
+      <normaloff>:/pic/images/student tab3.ico</normaloff>:/pic/images/student tab3.ico</iconset>
     </attribute>
     <attribute name="title">
      <string>归还</string>
