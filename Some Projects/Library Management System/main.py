@@ -1,3 +1,4 @@
+# 图书管理系统入口
 
 import sys
 from PyQt5 import QtCore
@@ -6,31 +7,6 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox, QAbstractItemVie
 from PyQt5.QtGui import QPixmap, QPainter
 from loginUI import Ui_loginUI
 from studentUI import Ui_StudentUI
-
-
-class Book:
-    def __init__(self, name, author, state, amount, position):
-        self.name = name
-        self.author = author
-        self.state = state
-        self.amount = amount
-        self.position = position
-
-
-""" 初始化图书 """
-books = []
-b1 = Book("三体", "刘慈欣", 1, 3, "SN700")
-b2 = Book("白夜行", "东野圭吾", 2, 5, "SN705")
-b3 = Book("放学后", "东野圭吾", 1, 1, "SN706")
-b4 = Book("秘密", "东野圭吾", 3, 10, "SN755")
-b5 = Book("解忧杂货店", "东野圭吾", 2, 4, "SN752")
-b6 = Book("超新星纪元", "刘慈欣", 1, 1, "SN857")
-books.append(b1)
-books.append(b2)
-books.append(b3)
-books.append(b4)
-books.append(b5)
-books.append(b6)
 
 
 class loginUI(QWidget, Ui_loginUI):
@@ -110,40 +86,61 @@ class studentUI(QWidget, Ui_StudentUI):
 
     def query_book(self):
         """ 查询操作槽函数 """
-        for book in books:
-            if book.name == self.query_ld.text():
-                lists = [(0, book.name), (1, book.author), (2, str(book.state)), (3, str(book.amount)), (4, book.position)]
-                for itemcotent in lists:
-                    item = QTableWidgetItem(itemcotent[1])
-                    item.setTextAlignment(Qt.AlignHCenter)
-                    self.query_tw.setItem(0, itemcotent[0], item)
-                return True
+        with open('bookDatabase.txt', encoding='utf-8') as file:
+            lines = file.readlines()
+            for line in lines:
+                name, author, state, amount, position = line.rstrip().split('，')
+                if name == self.query_ld.text():
+                    lists = [(0, name), (1, author), (2, state), (3, amount), (4, position)]
+                    for itemcotent in lists:
+                        item = QTableWidgetItem(itemcotent[1])
+                        item.setTextAlignment(Qt.AlignHCenter)
+                        self.query_tw.setItem(0, itemcotent[0], item)
+                    return True
         QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         return False
 
     def borrow_book(self):
         """ 借阅操作槽函数 """
-        for book in books:
-            if book.name == self.borrow_ld.text():
-                if book.state:
-                    book.state = book.state -1
-                    QMessageBox.information(self, "title", "借阅成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-                else:
-                    QMessageBox.information(self, "title", "此书已全部借出", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-                return True
+        with open('bookDatabase.txt', 'r', encoding='utf-8') as fileR:
+            lines = fileR.readlines()
+        with open('bookDatabase.txt', 'w', encoding='utf-8') as fileW:
+            lineNum = 0
+            for line in lines:
+                name, author, state, amount, position = line.rstrip().split('，')
+                if name == self.borrow_ld.text():
+                    state = int(state)
+                    if state > 0:
+                        lines[lineNum] = name + '，' + author + '，' + str(state-1) + '，' + amount + '，' + position + '\n'
+                        QMessageBox.information(self, "title", "借阅成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    else:
+                        QMessageBox.information(self, "title", "此书已全部借出", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    print(lines)
+                    fileW.writelines(lines)
+                    return True
+                lineNum = lineNum + 1
         QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         return False
 
     def back_book(self):
         """ 归还操作槽函数 """
-        for book in books:
-            if book.name == self.back_ld.text():
-                if book.state < book.amount:
-                    book.state = book.state + 1
-                    QMessageBox.information(self, "title", "还书成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-                else:
-                    QMessageBox.information(self, "title", "馆藏可没这么多", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-                return True
+        with open('bookDatabase.txt', 'r', encoding='utf-8') as fileR:
+            lines = fileR.readlines()
+        with open('bookDatabase.txt', 'w', encoding='utf-8') as fileW:
+            lineNum = 0
+            for line in lines:
+                name, author, state, amount, position = line.rstrip().split('，')
+                if name == self.back_ld.text():
+                    state = int(state)
+                    if state < int(amount):
+                        lines[lineNum] = name + '，' + author + '，' + str(state+1) + '，' + amount + '，' + position + '\n'
+                        QMessageBox.information(self, "title", "还书成功", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    else:
+                        QMessageBox.information(self, "title", "馆藏可没这么多", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    print(lines)
+                    fileW.writelines(lines)
+                    return True
+                lineNum = lineNum + 1
         QMessageBox.information(self, "title", "本图书馆没有收录此书籍", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         return False
 
